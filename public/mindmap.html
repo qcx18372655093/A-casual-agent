@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Creator · AI 项目工作台 — 功能思维导图</title>
+<style>
+  :root{
+    --ink:#1f242e; --ink2:#444b57; --ink3:#78818f; --line:#dfe3ea;
+    --canvas:#eef0f4; --card:#ffffff;
+    --green:#18a86b; --blue:#3578e5; --purple:#7c5cf0; --orange:#e8872e;
+    --cyan:#0ea5b7; --red:#df5b63; --amber:#ca9a16; --teal:#0f9d8f;
+    --indigo:#4f63c9; --pink:#d85793; --slate:#5d6b7a;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html,body{background:var(--canvas);font-family:"PingFang SC","Microsoft YaHei",-apple-system,sans-serif;color:var(--ink);}
+  .topbar{
+    position:sticky;top:0;z-index:30;background:rgba(238,240,244,.92);backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);padding:14px 28px;
+  }
+  .topbar h1{font-size:18px;font-weight:700;letter-spacing:.01em;display:flex;align-items:center;gap:10px;}
+  .topbar h1 .dot{width:10px;height:10px;border-radius:3px;background:var(--ink);}
+  .topbar p{font-size:12.5px;color:var(--ink3);margin-top:4px;}
+  .legend{display:flex;gap:14px;margin-top:8px;flex-wrap:wrap;font-size:11.5px;color:var(--ink3);}
+  .legend span{display:inline-flex;align-items:center;gap:5px;}
+  .legend i{width:9px;height:9px;border-radius:50%;display:inline-block;}
+
+  .viewport{overflow:auto;padding:36px 30px 60px;}
+  .board{position:relative;margin:0 auto;}
+  svg.wires{position:absolute;inset:0;pointer-events:none;z-index:1;}
+  .node{position:absolute;z-index:2;}
+
+  .root-node{
+    z-index:5;border-radius:18px;padding:18px 22px;background:var(--ink);color:#fff;
+    box-shadow:0 14px 34px rgba(31,36,46,.28);text-align:center;
+  }
+  .root-node b{display:block;font-size:16px;letter-spacing:.02em;}
+  .root-node span{display:block;font-size:11.5px;color:rgba(255,255,255,.72);margin-top:5px;line-height:1.5;}
+
+  .d-node{
+    border-radius:13px;padding:10px 14px;background:var(--card);
+    box-shadow:0 3px 12px rgba(31,36,46,.08);border:1.5px solid var(--c);
+    min-width:168px;
+  }
+  .d-node .t{font-size:13.5px;font-weight:700;color:var(--c);display:flex;align-items:center;gap:7px;}
+  .d-node .t .n{
+    width:19px;height:19px;border-radius:6px;background:var(--c);color:#fff;font-size:11px;
+    display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;font-weight:700;
+  }
+  .d-node .r{font-size:10.5px;color:var(--ink3);margin-top:4px;margin-left:26px;font-family:ui-monospace,Menlo,monospace;}
+
+  .g-node{
+    border-radius:10px;padding:8px 12px;background:color-mix(in srgb,var(--c) 9%,#fff);
+    border:1px solid color-mix(in srgb,var(--c) 30%,#fff);
+    font-size:12px;font-weight:700;color:var(--ink2);min-width:140px;
+    display:flex;align-items:center;gap:7px;
+  }
+  .g-node .bar{width:4px;height:14px;border-radius:2px;background:var(--c);}
+
+  .l-node{
+    background:var(--card);border:1px solid var(--line);border-radius:11px;
+    padding:9px 12px 10px;width:318px;
+    box-shadow:0 2px 8px rgba(31,36,46,.05);
+  }
+  .l-node:hover{box-shadow:0 6px 18px rgba(31,36,46,.12);border-color:color-mix(in srgb,var(--c) 45%,#fff);}
+  .l-node .lt{font-size:12.5px;font-weight:650;color:var(--ink);display:flex;gap:7px;align-items:baseline;}
+  .l-node .lt::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--c);flex:0 0 auto;transform:translateY(-1px);}
+  .l-node .ld{font-size:11.5px;line-height:1.62;color:var(--ink2);margin-top:4px;margin-left:13px;}
+  .l-node .ld code{font-family:ui-monospace,Menlo,monospace;font-size:10.5px;background:#f1f3f7;border:1px solid var(--line);border-radius:4px;padding:0 4px;color:var(--ink2);}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <h1><span class="dot"></span>Creator · AI 项目工作台 — 功能思维导图</h1>
+  <p>中心主题向左/右放射 16 条主分支，逐级展开至具体功能点；每个功能点下方直接说明它的作用与对应交互。全部节点默认展开，可横向 / 纵向滚动查看。</p>
+  <div class="legend">
+    <span><i style="background:var(--indigo)"></i>登录认证</span>
+    <span><i style="background:var(--green)"></i>工作台 / 项目</span>
+    <span><i style="background:var(--blue)"></i>任务 / 审批 / 技能 / 连接器</span>
+    <span><i style="background:var(--cyan)"></i>知识 / 自动化 / 上下文</span>
+    <span><i style="background:var(--purple)"></i>能力拓展 / 智能应用</span>
+    <span><i style="background:var(--orange)"></i>案例库 / 审计</span>
+    <span><i style="background:var(--slate)"></i>平台架构 / LLM 底座</span>
+  </div>
+</div>
+
+<div class="viewport"><div class="board" id="board">
+  <svg class="wires" id="wires"></svg>
+</div></div>
+
+<script>
+/* ================= 思维导图数据（中心 → 域 → 功能点） ================= */
+const DATA = [
+/* ———————————— 右侧 ———————————— */
+{side:'right', color:'var(--indigo)', t:'登录认证与权限', route:'/login · backend/src/auth.js', children:[
+  {t:'登录页', d:'账号密码登录，展示三个演示账户（admin / approver / member）可点击一键填充；成功后写入 localStorage creator_token 并回跳 redirect 目标页。'},
+  {t:'会话令牌', d:'POST /api/auth/login 校验 scrypt 加盐哈希后签发 48 位 hex Bearer 令牌，7 天过期；GET /api/auth/me 取当前用户，POST /api/auth/logout 注销会话。'},
+  {t:'三角色权限', d:'admin 管理员 / approver 审批人 / member 成员；审批决策接口仅 approver 与 admin 可用（其余 403），成员可正常发起任务与提问。'},
+  {t:'认证闸门', d:'后端 app.use("/api", requireAuth) 保护全部业务接口，仅 login 与 /api/health 免登；前端路由 beforeEach 守卫，未登录跳 /login。'},
+  {t:'401 自动回登录', d:'api.js 统一带 Authorization 头；任一接口返回 401 即清除令牌并跳 /login?redirect= 当前路径，登录后原路返回。'},
+  {t:'操作人实名', d:'审计与任务发起人统一 actor(req) = 当前登录用户姓名，替代硬编码，留痕可追溯到人。'},
+]},
+{side:'right', color:'var(--green)', t:'对话工作台', route:'/ HomeView', children:[
+  {t:'对话优先首页', d:'打开系统即落到大输入框工作台，而不是功能菜单；AI 是唯一主入口，页面顶部为问候语，底部为吸底输入框。'},
+  {t:'场景卡片（4 张）', d:'需求梳理 / 研发协作 / 知识问答 / 运维排障，点击自动填充引导 prompt 到 Composer，是引导而非独立功能页。'},
+  {t:'当前工作区横幅', d:'显示当前项目名与授权范围（N 项技能 · M 个连接器 · 项目资料），可"更换工作区 / 解绑"；未选时提示选择，对话默认归属当前项目。'},
+  {t:'吸底 Composer', d:'多行输入 + Enter 发送 / Shift+Enter 换行；模式选择（问一问/想一想/做一做）与模型选择；提交跳转 /tasks/new 携带 mode、prompt、projectId 发起任务。'},
+  {t:'Creator AI 介绍', d:'说明演示环境、可调用技能/连接器/知识、高风险操作需审批，明确能力边界。'},
+  {t:'"为项目拓展 Agent"条', d:'直达能力拓展（/solutions），引导为当前项目选装各平台域能力包。'},
+]},
+{side:'right', color:'var(--green)', t:'公司项目', route:'/projects · /projects/:id', children:[
+  {t:'项目 = 授权边界', d:'技能、连接器、知识资料按项目授权；AI 只能在当前项目授权范围内调用工具，任务自动携带 projectId。'},
+  {t:'项目列表页', d:'卡片展示全部项目、授权技能/连接器数量；可新建项目（名称、业务线、描述）。'},
+  {t:'项目详情 · 概览 Tab', d:'项目基本信息、成员、已授权技能/连接器；下拉选择即可添加授权，× 移除授权（PATCH /api/projects/:id）。'},
+  {t:'项目详情 · 智能应用 Tab', d:'按 project.skillIds 映射展示该项目已授权应用（告警降噪、数据质量等），内嵌直接运行；未授权应用引导去能力拓展选装。'},
+  {t:'项目详情 · 任务/知识 Tab', d:'查看该项目下的 AI 任务记录与挂载的知识资料。'},
+  {t:'设为当前工作区', d:'详情页一键把项目写为全局当前工作区（localStorage 持久化），侧栏与首页横幅同步标记。'},
+  {t:'项目切换内容刷新', d:'watch 路由 id，切换项目后重置 Tab 并重新加载，避免同路由组件复用导致内容不变。'},
+]},
+{side:'right', color:'var(--blue)', t:'AI 任务与对话', route:'/tasks · /tasks/:id', children:[
+  {t:'任务列表', d:'历史任务按时间展示（标题、模式、状态、demo 标记），点击进入任务对话。'},
+  {t:'任务对话页', d:'左侧任务元信息，右侧消息流；复用为新建任务页 /tasks/new，从 query 读取初始参数。'},
+  {t:'模式一：问一问 ask', d:'默认模式，直接回答与信息查询；禁止写操作类工具，需要执行时给出建议。'},
+  {t:'模式二：想一想 plan', d:'先产出结构化分步计划（PlanCard），用户"确认执行"后才跑；计划可"重新生成"。'},
+  {t:'模式三：做一做 craft', d:'自主编排多步任务，逐步执行并在时间线实时点亮步骤。'},
+  {t:'模型选择', d:'Composer 中切换不同 LLM（默认 doubao-seed-2-0-pro），选择随任务参数传递。'},
+  {t:'SSE 流式输出', d:'POST /api/chat/stream 返回 text/event-stream；前端 fetch reader 逐 delta 打字机渲染，不等待整段完成。'},
+  {t:'步骤时间线', d:'工具调用、执行结果以 StepTimeline 逐条点亮：技能/连接器名、耗时、状态、demo 标记。'},
+  {t:'审批卡片', d:'遇到高风险动作挂起任务，卡片说明风险并提供"批准执行 / 拒绝"按钮。'},
+  {t:'断点续跑', d:'审批通过调 POST /api/tasks/:id/resume 直接执行挂起工具并回到主循环；断流重开可续看。'},
+  {t:'Markdown 渲染', d:'MarkdownText 渲染标题/列表/表格/代码块，回答中显著标注「演示数据」。'},
+]},
+{side:'right', color:'var(--blue)', t:'待办与审批', route:'/approvals', children:[
+  {t:'待办中心', d:'聚合 waiting_approval 任务与系统待办，集中处理 AI 挂起的高风险请求。'},
+  {t:'高风险审批闸门', d:'识别删除、批量变更、矩阵批量下发等高风险动作 → 自动转人工审批，AI 无法自行执行。'},
+  {t:'批准 / 拒绝', d:'批准后任务 resume 执行；拒绝则终止该动作并把原因写回对话。'},
+  {t:'审批角色门禁', d:'决策接口仅 approver / admin 角色可用，member 调用返回 403；对话内审批按钮同样受角色控制。'},
+  {t:'侧栏角标', d:'导航"待办与审批"带未处理数量角标，全局可见。'},
+]},
+{side:'right', color:'var(--blue)', t:'技能中心', route:'/skills SkillsView', children:[
+  {t:'技能库浏览', d:'卡片展示全部 Skill：描述、适用场景、输入/输出、步骤、依赖连接器；可"挂到当前工作区"。'},
+  {t:'新建技能 · 三执行体', d:'plan_only 只出计划 / kb_answer 检索知识空间作答（可选定空间与 topK）/ http_call 真实调用外部 HTTP 接口，保存即生成 toolName（skill.cx_*）。'},
+  {t:'导入 JSON', d:'POST /api/skills/import 粘贴 JSON 即建技能，normalizeSkillImport 校验名称/风险/执行体，同名幂等不重复。'},
+  {t:'技能试运行', d:'抽屉内「试运行」打开工具调试台，传参直接执行，查看耗时、返回结构与 demo 标记，所见即所得验证执行体配置。'},
+  {t:'被 AI 真实调用', d:'custom 且启用的技能自动进入 LLM 决策工具清单（按执行体生成参数 schema），对话中真实执行并写入步骤时间线。'},
+  {t:'自定义可删除', d:'仅 custom:true 技能可 DELETE（级联移出各项目授权）；预置 builtin 技能只可停用不可删除。'},
+  {t:'内置技能执行器', d:'告警 RCA、日志诊断、数据质检、节点巡检、矩阵批量计划等确定性汇聚数据后交 LLM 成文，不伪装思考。'},
+]},
+{side:'right', color:'var(--blue)', t:'连接器中心', route:'/connectors ConnectorsView', children:[
+  {t:'连接器目录', d:'展示 APM、日志、矩阵、中控等连接器与在线状态；连接器是 AI 触达外部系统的通道，可"授给当前工作区"。'},
+  {t:'声明式 HTTP 工具', d:'连接器可携带 tools[]：name/method/url/headers/body/params 声明即得工具，{{参数}} 模板渲染，15s 超时保护；GET 自动判定 read/low，其余 write/medium。'},
+  {t:'动态注册进 MCP', d:'连接器 connected 且被项目授权后，其自定义工具进入 LLM 可用工具清单；执行时内置工具优先、未命中回退自定义 HTTP 工具。'},
+  {t:'授权接入', d:'新建连接器默认 disconnected，需显式授权接入转为 connected 后才可被调用，未连接的工具执行返回 409 引导授权。'},
+  {t:'工具调试', d:'抽屉工具表每行「试运行」直接调用 POST /api/tools/test 验证声明式工具；未连接时按钮禁用并提示。'},
+  {t:'新建 / 导入 / 删除', d:'新建弹窗内嵌工具编辑器逐行声明；导入 JSON 同构校验；工具名全局查重（冲突 409）；仅 custom 可删并级联移出项目授权。'},
+]},
+{side:'right', color:'var(--cyan)', t:'知识空间', route:'/knowledge KnowledgeView', children:[
+  {t:'空间管理', d:'team / project 两类空间，可新建（同名 409）；删除仅允许空空间，builtin 403、有文档 409。'},
+  {t:'上传 AI 识别（两步式）', d:'POST /api/knowledge/parse：文件上传 S3 → 预签名 URL → FetchClient 解析正文 → LLM 产出标题/分类/标签/摘要，失败本地兜底。'},
+  {t:'识别结果可编辑', d:'前端展示可编辑的标题/分类/标签/摘要/正文，用户确认后再 POST 入库，AI 识别不直接落库。'},
+  {t:'多格式支持', d:'txt/md/pdf/Office/csv/json ≤15MB；纯文本上传前自动拼 UTF-8 BOM 防 latin1 乱码。'},
+  {t:'知识库问答', d:'对话中触发检索：CJK 二元分词命中相关文档，回答附来源；kb_answer 类自定义技能共用同一检索引擎。'},
+  {t:'显控排障 SOP 空间', d:'预置指挥中心/会议室/报告厅排障规范与案例，供 RCA 与问答引用。'},
+]},
+
+/* ———————————— 左侧 ———————————— */
+{side:'left', color:'var(--cyan)', t:'自动化', route:'/automations AutomationsView', children:[
+  {t:'规则列表', d:'触发器 + 动作编排的规则卡片，展示启停状态、最近触发与执行结果。'},
+  {t:'创建 / 启停', d:'可创建自动化规则、启用、停用；执行记录写审计日志。'},
+  {t:'与技能分工', d:'自动化做"定时/事件触发的固定动作"，技能做"AI 按需调用的能力"，入口不重叠。'},
+]},
+{side:'left', color:'var(--purple)', t:'能力拓展', route:'/solutions SolutionsView', children:[
+  {t:'方案中心定位', d:'按公司项目类型选装 Agent 能力包的市场；装配是项目获取技能/连接器的统一入口。'},
+  {t:'七大平台域', d:'综合运维集控 ops / 分布式坐席 ecis / 光纤坐席 fsp / 矩阵拼接 matrix / 中央控制 control / 数字会议 conference / 智慧教育 education，对齐公司业务主线。'},
+  {t:'10 套方案卡片', d:'痛点说明、包含技能与连接器标签、推荐提问、采用次数、已装配项目。'},
+  {t:'一键装配 · 当前项目', d:'POST /api/solutions/:id/apply 把方案的 skillIds/connectorIds 合并进指定项目，幂等不重复授权。'},
+  {t:'一键装配 · 新建工作区', d:'无 projectId 时幂等新建 p_sol_ 前缀项目（如"矩阵设备灰度批量控制工作区"），装配后切到该项目。'},
+  {t:'装配 → 应用贯通', d:'装配完成跳转任务对话并带入推荐 prompt；项目"智能应用"Tab 立即出现对应应用。'},
+]},
+{side:'left', color:'var(--purple)', t:'智能应用（项目内）', route:'/alerts · /data-quality（可内嵌）', children:[
+  {t:'告警降噪 · 统计卡', d:'告警总数、P1/P2 数、已抑制噪声数、关联事件数四项指标，一屏判断噪声水平。'},
+  {t:'告警降噪 · 事件归并', d:'Skill correlateAlerts 按时间窗 + dedupKey 指纹抑制重复告警，recovered 抖动标记为噪声，按事件聚合。'},
+  {t:'告警降噪 · 原始告警表', d:'级别、指标值、来源、时间、降噪标记、确认状态；可确认/取消确认、指派处理人（PATCH /api/alerts/:id）。'},
+  {t:'告警降噪 · AI 关联分析', d:'POST /api/alerts/analyze：Skill 汇聚证据 → 真实 LLM invoke 输出 Markdown 报告（根因/证据链/处置建议）；模型失败自动降级文本不阻断。'},
+  {t:'数据质量 · 规则表', d:'重复率/超阈值/标签错误/空值四类规则，展示阈值、合格率、趋势箭头与启停开关。'},
+  {t:'数据质量 · 立即质检', d:'POST /api/data-quality/run 执行 data_quality_check 技能，回写合格率趋势并插入运行记录。'},
+  {t:'数据质量 · 命中明细', d:'查看某次运行的问题明细；"让 Agent 给治理方案"带项目上下文跳转对话。'},
+  {t:'SOP 智能问答', d:'在对话框直接提问如"大屏无信号怎么排查？"，检索 SOP 空间返回企业标准排查流程并引用来源文档。'},
+  {t:'内嵌 vs 独立路由', d:'项目智能应用 Tab 内嵌运行（隐藏页头、带项目上下文）；/alerts、/data-quality 同时保留为独立页面。'},
+]},
+{side:'left', color:'var(--orange)', t:'案例库', route:'/cases ExploreView', children:[
+  {t:'案例浏览', d:'按场景沉淀的历史案例卡片，展示场景、做法与可复用的 prompt。'},
+  {t:'复制 prompt 开任务', d:'一键把案例 prompt 带入 Composer / 新任务，降低上手门槛。'},
+  {t:'与方案中心分工', d:'案例库给"怎么问"的参考；能力拓展给"装什么能力"，两者不重复入口。'},
+]},
+{side:'left', color:'var(--orange)', t:'审计日志', route:'/audit', children:[
+  {t:'全操作留痕', d:'技能执行、连接器调用、授权变更、审批决策、质检运行、工具调试（tool.test）均写 audit，含时间、操作者、对象、demo 标记。'},
+  {t:'操作人实名', d:'actor(req) 取当前登录用户姓名，任何 AI 动作事后可追溯到人。'},
+  {t:'追溯与筛选', d:'按类型 / 时间 / 关键词过滤，支撑合规审查。'},
+  {t:'演示数据可识别', d:'演示连接器产生的记录全程 demo:true，审计中可与真实操作区分。'},
+]},
+{side:'left', color:'var(--cyan)', t:'工作上下文面板', route:'全局右侧抽屉 WorkContextPanel', children:[
+  {t:'连接器在线状态', d:'显示 n/n 在线与绿点状态，让"AI 可调用的世界"可视化。'},
+  {t:'中控设备开关', d:'toggle 即时控制设备（POST /api/devices/:id/toggle），乐观更新反馈。'},
+  {t:'快捷操作', d:'常用动作入口（发起任务、看告警等）。'},
+  {t:'待办勾选', d:'轻量待办事项直接勾选完成。'},
+  {t:'显隐控制', d:'由 gs.contextOpen 全局控制开关，不抢占主工作区。'},
+]},
+{side:'left', color:'var(--slate)', t:'前后端分离架构', route:'backend/ · scripts/prod.js · vite.config.js', children:[
+  {t:'独立后端项目', d:'backend/ 为独立 Express 5（ESM）Node 项目，自有 package.json，pnpm workspace 统一管理；监听 BACKEND_PORT（默认 5001，仅内网）。'},
+  {t:'开发双进程', d:'后端 node --watch-path=src 热重启（写库不触发，数据目录在 src 之外）；前端 vite 把 /api/* 代理到后端，SSE 流式透传含 502 兜底。'},
+  {t:'生产网关 prod.js', d:'单入口 spawn 后端子进程（崩溃 1s 自动重启）+ 托管 dist 静态 + /api fetch 流式代理（Readable.fromWeb 管道不缓冲，客户端断连 abort 上游）。'},
+  {t:'CORS 放开', d:'后端允许跨域直连（ALLOWED_ORIGINS 可配，缺省回显 Origin），常规仍走同源代理。'},
+  {t:'文件型数据层', d:'backend/data/db.json：白名单集合 + 防抖落盘 + 原子写；空库播种基础数据，平台扩展与用户账户一次性补播。'},
+  {t:'前端 API 层', d:'src/api.js 统一封装 fetch 并自动带 Bearer 令牌；SSE 流单独用 reader 处理；401 清令牌回登录页。'},
+]},
+{side:'left', color:'var(--slate)', t:'LLM 编排与能力模型', route:'backend/src/llm.js · mcp.js · skills.js', children:[
+  {t:'两阶段 LLM 编排', d:'① 非流式 invoke（temperature 0）只输出 JSON 决策；② 执行工具；③ 独立 stream 流式答复。规避自由文本标签协议不可靠问题。'},
+  {t:'三种 JSON 决策', d:'{"action":"answer"} 直接回答 / {"action":"tool"} 调工具 / {"action":"plan"} 出计划；parseDecision 容错提取。'},
+  {t:'MCP 三层能力模型', d:'Connector（授权边界 + 声明式工具）→ Tool 注册表（统一契约 {ok,demo,data,error,sources}）→ Skill 执行器；详见 CAPABILITY_MODEL.md。'},
+  {t:'通用技能执行器', d:'EXECUTORS 注册表执行 plan_only / kb_answer / http_call，自定义技能从"只登记"变为"可真实调用"，schema 按执行体确定性生成。'},
+  {t:'声明式 HTTP 引擎', d:'renderTemplate 替换 {{参数}}、AbortSignal 15s 超时、非 2xx 返回结构化错误、JSON 解析失败回退文本。'},
+  {t:'工具调试台', d:'POST /api/tools/test 按名称解析技能/MCP 工具并计时执行；risk=high 拒绝（403 引导走审批），未连接连接器 409，全程写审计。'},
+  {t:'模式策略 + 风险闸门', d:'Ask 禁写、Plan 未确认禁写；高风险工具一律转 waiting_approval；审批后 resumeWithApprovedTool 执行。'},
+  {t:'SSE 事件协议', d:'meta / delta / step / plan / approval / status / error / done；断连判定用 res.on("close")，不能用 req.on（请求体读完即误触发）。'},
+  {t:'数据可信铁律', d:'演示连接器结果 demo=true 沿 step → task → 回答全程传递并显著标注；禁止 Mock 冒充真实执行。'},
+]},
+];
+
+/* ================= 布局渲染 ================= */
+const W = {domain:172, group:150, leaf:318};
+const GAP = {domain:26, group:16, leaf:9};
+const ROOT_W = 188, ROOT_GAP = 56;
+
+function countLines(text, perLine){ return Math.max(1, Math.ceil(text.length/perLine)); }
+
+/* 测量子树高度：node.kind = domain / group / leaf */
+function measure(node, kind){
+  node.kind = kind;
+  if(kind === 'leaf'){
+    const descLines = countLines(node.d, 24);
+    node.h = descLines*19 + 40;
+    node.w = W.leaf;
+    return;
+  }
+  const childKind = kind === 'domain' ? (node.children[0].children ? 'group' : 'leaf') : 'leaf';
+  let h = 0;
+  node.children.forEach((c, i)=>{
+    measure(c, childKind);
+    h += c.h + (i ? (childKind==='leaf' ? GAP.groupLeaf : GAP.group) : 0);
+  });
+  // domain 若直接包 leaf：间距用 leaf gap
+  if(kind === 'domain' && childKind === 'leaf'){
+    h = node.children.reduce((s,c,i)=> s + c.h + (i?GAP.leaf:0), 0);
+  }
+  node.h = Math.max(h, 46);
+  node.w = kind === 'domain' ? W.domain : W.group;
+}
+
+/* 分配纵向位置：node.y = 盒子顶部 */
+function layout(node, yTop, gap){
+  node.y = yTop;
+  if(!node.children) return;
+  let cy = yTop;
+  const childGap = node.kind === 'domain'
+    ? (node.children[0].kind==='group' ? GAP.group : GAP.leaf)
+    : GAP.leaf;
+  node.children.forEach(c=>{ layout(c, cy, childGap); cy += c.h + childGap; });
+  const first = node.children[0], last = node.children[node.children.length-1];
+  node.centerY = (first.y + first.h/2 + last.y + last.h/2)/2;
+}
+
+const board = document.getElementById('board');
+const wires = document.getElementById('wires');
+const nodes = [];
+const paths = [];
+
+/* 每侧子树的层 x（盒子左缘，相对该侧根边缘 0） */
+const xLayer = {domain:0, group:W.domain+54, leaf:W.domain+54+W.group+46};
+const subtreeW = xLayer.leaf + W.leaf;
+
+DATA.forEach(domain => measure(domain, 'domain'));
+const rightDomains = DATA.filter(d=>d.side==='right');
+const leftDomains  = DATA.filter(d=>d.side==='left');
+
+function stackDomains(list){
+  let y = 0;
+  list.forEach((d,i)=>{ layout(d, y, 0); d.selfCenter = y + d.h/2; y += d.h + (i?GAP.domain:0); });
+  return y - GAP.domain;
+}
+const rightH = stackDomains(rightDomains);
+const leftH  = stackDomains(leftDomains);
+const contentH = Math.max(rightH, leftH);
+const ROOT_H = 96;
+const boardH = contentH + 80;
+const boardW = subtreeW*2 + ROOT_GAP*2 + ROOT_W;
+board.style.width = boardW + 'px';
+board.style.height = boardH + 'px';
+wires.setAttribute('width', boardW);
+wires.setAttribute('height', boardH);
+
+const rootX = (boardW - ROOT_W)/2;
+const rootY = boardH/2 - ROOT_H/2;
+const rightBaseX = rootX + ROOT_W + ROOT_GAP;
+const leftBaseX  = rootX - ROOT_GAP;   // 左子树右边界
+
+function domainX(kind, side){
+  if(side==='right') return rightBaseX + xLayer[kind];
+  return leftBaseX - xLayer[kind];
+}
+
+function emitTree(domain, side){
+  const dX = domainX('domain', side);
+  domain.absX = dX; domain.absY = domain.y;
+  // 主分支节点相对其子树垂直居中
+  const domTop = boxCenterY(domain) - 24;
+  nodes.push({kind:'domain', x: side==='right'? dX : dX-W.domain, y:domTop, w:W.domain, color:domain.color, t:domain.t, route:domain.route});
+  (domain.children||[]).forEach(child=> emitChild(child, domain, side));
+}
+
+function boxCenterY(n){ return (n.centerY!==undefined ? n.centerY : n.y + n.h/2); }
+
+function emitChild(child, parent, side){
+  const cX = domainX(child.kind, side);
+  child.absX = cX; child.absY = child.y;
+  if(child.kind==='group'){
+    const gTop = boxCenterY(child) - 17;
+    nodes.push({kind:'group', x: side==='right'?cX:cX-W.group, y:gTop, w:W.group, color:parent.color, t:child.t});
+  }
+  else nodes.push({kind:'leaf', x: side==='right'?cX:cX-W.leaf, y:child.y, w:W.leaf, color:parent.color, t:child.t, d:child.d});
+  (child.children||[]).forEach(gc=> emitChild(gc, child, side));
+}
+
+function wire(parent, child, side){
+  const pCenterY = boxCenterY(parent), cCenterY = boxCenterY(child);
+  const px = side==='right' ? parent.absX + parent.w : parent.absX;
+  const cx = side==='right' ? child.absX : child.absX + child.w;
+  const bend = 34;
+  let d;
+  if(side==='right'){
+    d = `M ${px} ${pCenterY} C ${px+bend} ${pCenterY}, ${cx-bend} ${cCenterY}, ${cx} ${cCenterY}`;
+  }else{
+    d = `M ${px} ${pCenterY} C ${px-bend} ${pCenterY}, ${cx+bend} ${cCenterY}, ${cx} ${cCenterY}`;
+  }
+  paths.push({d, color: parent.color});
+}
+
+/* 收集节点与全部连线（根→域、域→功能点） */
+function collectWires(domain, side){
+  const dCenterY = boxCenterY(domain);
+  const px = side==='right' ? rootX+ROOT_W : rootX;
+  const cx = side==='right' ? domain.absX : domain.absX + W.domain;
+  const py = rootY+ROOT_H/2, bend = 70;
+  const dPath = side==='right'
+    ? `M ${px} ${py} C ${px+bend} ${py}, ${cx-bend} ${dCenterY}, ${cx} ${dCenterY}`
+    : `M ${px} ${py} C ${px-bend} ${py}, ${cx+bend} ${dCenterY}, ${cx} ${dCenterY}`;
+  paths.push({d:dPath, color:domain.color, root:true});
+  (domain.children||[]).forEach(c=>{
+    wire(domain, c, side);
+    (c.children||[]).forEach(gc=> wire(c, gc, side));
+  });
+}
+rightDomains.forEach(d=>{emitTree(d,'right'); collectWires(d,'right');});
+leftDomains.forEach(d=>{emitTree(d,'left'); collectWires(d,'left');});
+
+/* 画线 */
+paths.forEach(p=>{
+  const path = document.createElementNS('http://www.w3.org/2000/svg','path');
+  path.setAttribute('d', p.d);
+  path.setAttribute('fill','none');
+  path.setAttribute('stroke', p.color);
+  path.setAttribute('stroke-width', p.root ? '2.4' : '1.5');
+  path.setAttribute('stroke-opacity', p.root ? '0.9' : '0.55');
+  wires.appendChild(path);
+});
+
+/* 画节点 */
+const rootEl = document.createElement('div');
+rootEl.className = 'node root-node';
+rootEl.style.left = rootX+'px';
+rootEl.style.top = rootY+'px';
+rootEl.style.width = ROOT_W+'px';
+rootEl.style.height = ROOT_H+'px';
+rootEl.innerHTML = '<b>Creator AI 项目工作台</b><span>企业级 Agent 平台<br>前后端分离 · 项目即授权边界<br>三模式协作 · 全程可审计</span>';
+board.appendChild(rootEl);
+
+let n1=0;
+nodes.forEach(n=>{
+  const el = document.createElement('div');
+  el.className = 'node ' + (n.kind==='domain'?'d-node':n.kind==='group'?'g-node':'l-node');
+  el.style.left = n.x+'px';
+  el.style.top = n.y+'px';
+  el.style.width = n.w+'px';
+  el.style.setProperty('--c', n.color);
+  if(n.kind==='domain'){
+    n1++;
+    el.innerHTML = `<div class="t"><span class="n">${n1}</span>${n.t}</div><div class="r">${n.route||''}</div>`;
+  }else if(n.kind==='group'){
+    el.innerHTML = `<span class="bar"></span>${n.t}`;
+  }else{
+    el.innerHTML = `<div class="lt">${n.t}</div><div class="ld">${linkify(n.d)}</div>`;
+  }
+  board.appendChild(el);
+});
+
+/* 描述文本中的接口/技术词做等宽高亮 */
+function linkify(text){
+  return text
+    .replace(/(POST|GET|PATCH|DELETE)\s+(\/[a-zA-Z0-9\/:_\-*]+)/g, '<code>$1 $2</code>')
+    .replace(/(demo:true|res\.on\([^)]*\)|localStorage|projectId|skillIds|connectorIds|dedupKey|SSE|LLM|JSON|Bearer|toolName|skill\.cx_\*|plan_only|kb_answer|http_call|requireAuth|scrypt|tool\.test|ALLOWED_ORIGINS|CAPABILITY_MODEL\.md|\{ok,demo,data,error,sources\})/g, '<code>$1</code>');
+}
+</script>
+</body>
+</html>
